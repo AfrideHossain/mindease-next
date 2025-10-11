@@ -19,7 +19,8 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          {/* Main content Area */}
+          <main className="container mx-auto p-4 md:p-0">{children}</main>
         </ThemeProvider>
       </body>
     </html>
