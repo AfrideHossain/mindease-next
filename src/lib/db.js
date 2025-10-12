@@ -23,9 +23,7 @@ export async function connectToDb() {
   if (!cached.promise) {
     console.log("⏳ Connecting to MongoDB...");
     cached.promise = mongoose
-      .connect(MONGODB_URI, {
-        dbName: "myDatabaseName", // optional but good to set
-      })
+      .connect(MONGODB_URI)
       .then((mongooseInstance) => {
         return mongooseInstance.connection;
       });
