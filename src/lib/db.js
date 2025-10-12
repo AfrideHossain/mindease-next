@@ -1,41 +1,45 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
+// check if the MONGO_URI is defined in environment variable
+const MONGO_URI = process.env.MONGO_URI;
+if (!MONGO_URI) {
   throw new Error("❌ Please define the MONGODB_URI environment variable");
 }
 
-// Create or reuse a global cache
-// (In dev mode, this survives hot reloads)
-let cached = global._mongooseConnection;
-
-if (!cached) {
-  cached = global._mongooseConnection = { conn: null, promise: null };
+// cache the mongodb connection to the global object;
+let cacheConn = global._mongooseConnection;
+// if not cached yet then create one
+if (!cacheConn) {
+  cacheConn = global._mongooseConnection = { conn: null, promise: null };
 }
 
+// ---------------------------------------------
+// 🔌 The main function to connect to MongoDB
+// ---------------------------------------------
 export async function connectToDb() {
-  if (cached.conn) {
+  //return cached connection if cached
+  if (cacheConn.conn) {
     console.log("✅ Using existing MongoDB connection");
-    return cached.conn;
+    return cacheConn.conn;
   }
-
-  if (!cached.promise) {
+  // If no ongoing connection promise exists,
+  // start a new one and save it in the cache
+  if (!cacheConn.promise) {
     console.log("⏳ Connecting to MongoDB...");
-    cached.promise = mongoose
-      .connect(MONGODB_URI)
-      .then((mongooseInstance) => {
-        return mongooseInstance.connection;
-      });
+    cacheConn.promise = mongoose
+      .connect(MONGO_URI)
+      .then((mongoInstance) => mongoInstance.connection);
   }
 
   try {
-    cached.conn = await cached.promise;
+    // ⏱️ 3) Wait for the connection to finish
+    cacheConn.conn = await cacheConn.promise;
     console.log("🚀 MongoDB connected successfully");
-    return cached.conn;
-  } catch (err) {
-    console.error("❌ MongoDB connection failed:", err);
+    return cacheConn.conn;
+  } catch (error) {
+    // ❌ 4) If connection fails, reset the promise
+    console.error("❌ MongoDB connection failed:", error);
     cached.promise = null;
-    throw err;
+    throw error;
   }
 }
