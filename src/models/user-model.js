@@ -1,7 +1,6 @@
 import mongoose, { Schema, model, models } from "mongoose";
 import bcrypt from "bcryptjs";
 
-
 const UserSchema = new Schema(
   {
     name: { type: String, required: true },
@@ -12,12 +11,16 @@ const UserSchema = new Schema(
 );
 
 // define a pre hook (do something just before sent it to database)
-UserSchema.pre("save", async (next) => {
-  if (this.isModified(this.password)) {
-    this.password = await bcrypt.hash(this.password, 20);
-  }
-  next();
-});
+// UserSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
+//   try {
+//     const salt = await bcrypt.genSalt(12);
+//     this.password = await bcrypt.hash(this.password, salt);
+//     next();
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 const User = models.User || model("User", UserSchema);
 export default User;
