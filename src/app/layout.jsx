@@ -2,6 +2,7 @@ import { Quicksand } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/theme-provider";
 import { connectToDb } from "@/lib/db";
+import { Toaster } from "@/components/ui/sonner";
 
 const quicksand = Quicksand({ subsets: ["latin"] });
 
@@ -24,6 +25,7 @@ export default async function RootLayout({ children }) {
         >
           {/* Main content Area */}
           <main className="container mx-auto p-4 md:p-0">{children}</main>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

@@ -24,19 +24,20 @@ export async function POST(request) {
         { status: 400 }
       );
     }
-    const hashedPass = await bcrypt.hash(password, 12);
-    
+    // const hashedPass = await bcrypt.hash(password, 12);
+
     const newUser = new User({
       name,
       email,
-      password: hashedPass,
+      // password: hashedPass,
+      password,
     });
 
     // save new user
     await newUser.save();
     //   send response
     return NextResponse.json(
-      { message: "User registered successfully." },
+      { success: true, message: "User registered successfully." },
       { status: 200 }
     );
   } catch (error) {
