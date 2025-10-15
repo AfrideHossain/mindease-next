@@ -5,8 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { loginSchema } from "@/lib/validations.auth";
-
-
+import { useRouter } from "next/navigation";
+import { credentialLogin } from "@/app/actions/authenticationAction";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [message, setMessage] = useState("");
@@ -15,9 +16,27 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(loginSchema) });
+  // router setup
+  const router = useRouter();
+
   // onsubmit handler
   const onSubmit = async (submissionData) => {
     console.log(submissionData);
+    // send request
+    try {
+      const res = await credentialLogin(submissionData);
+      console.log({ res });
+      if (!!res.error) {
+        console.log(res.error);
+        setMessage(res.error.message);
+      } else {
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("sign in error=> ", error);
+      toast.error("Login failed! Check your credentials.");
+      setMessage("Check your credentials");
+    }
   };
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">

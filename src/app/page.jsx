@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import React from "react";
 
 export default function Home() {
@@ -13,7 +14,9 @@ export default function Home() {
           minimalistic and anonymous journaling experience.
         </p>
       </div>
-      <Button className={"capitalize"}>Login/Get started</Button>
+      <Button className={"capitalize"} asChild>
+        <Link href={"/login"}>Login/Get started</Link>
+      </Button>
     </section>
   );
 }
