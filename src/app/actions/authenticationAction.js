@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 
 export async function credentialLogin(formData) {
   // const email = formData.get("email");
@@ -19,4 +19,9 @@ export async function credentialLogin(formData) {
     console.log("Credential login error: ", error);
     throw error;
   }
+}
+
+// logout
+export async function logoutUser() {
+  await signOut({ redirectTo: "/" });
 }

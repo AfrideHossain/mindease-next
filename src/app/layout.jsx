@@ -3,6 +3,8 @@ import "./globals.css";
 import ThemeProvider from "@/components/theme-provider";
 import { connectToDb } from "@/lib/db";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/Navbar/Navbar";
+import Providers from "@/components/providers/Providers";
 
 const quicksand = Quicksand({ subsets: ["latin"] });
 
@@ -12,7 +14,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  await connectToDb();
+  // await connectToDb();
   // console.log("After mongo connection => ", global);
   return (
     <html lang="en" className="h-full w-full" suppressHydrationWarning>
@@ -23,9 +25,13 @@ export default async function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          {/* Main content Area */}
-          <main className="container mx-auto p-4 md:p-0">{children}</main>
-          <Toaster />
+          <Providers>
+            <Navbar />
+            {/* Main content Area */}
+            <main className="container mx-auto p-4 md:p-0">{children}</main>
+
+            <Toaster />
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
