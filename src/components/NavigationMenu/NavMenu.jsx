@@ -21,13 +21,13 @@ export const menuItems = [
   {
     sl: 2,
     title: "dashboard",
-    path: "/",
+    path: "/dashboard",
     needSession: false,
   },
   {
     sl: 3,
     title: "about",
-    path: "/",
+    path: "/about",
     needSession: false,
   },
 ];
