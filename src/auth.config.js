@@ -12,6 +12,7 @@ export const authConfig = {
     async token(user, token) {
       if (user) {
         token.id = user.id || user._id?.toString();
+        token.name = user.name;
         token.email = user.email;
       }
       return token;
@@ -19,6 +20,7 @@ export const authConfig = {
     async session(session, token) {
       if (token) {
         session.user.id = token.id;
+        session.user.name = token.name;
         session.user.email = token.email;
       }
       return session;

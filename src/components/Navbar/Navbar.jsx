@@ -5,6 +5,7 @@ import { ToggleDarkMode } from "./ToggleDarkMode";
 import { Button } from "../ui/button";
 import { LogInIcon } from "lucide-react";
 import { NavMenu } from "../NavigationMenu/NavMenu";
+import NavUser from "./NavUser";
 
 export default async function Navbar() {
   const session = await auth();
@@ -21,7 +22,7 @@ export default async function Navbar() {
         <div>
           <NavMenu />
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <ToggleDarkMode />
           {session?.user ? (
             <LogoutBtn />
@@ -32,6 +33,7 @@ export default async function Navbar() {
               </Link>
             </Button>
           )}
+          <NavUser user={session?.user} />
         </div>
       </div>
     </nav>
