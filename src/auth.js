@@ -37,7 +37,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
 
           // check password
-          const isValidPassword = bcrypt.compare(
+          const isValidPassword = await bcrypt.compare(
             credentials.password,
             user.password
           );
@@ -62,4 +62,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     ...authConfig.callbacks,
   },
+  secret: process.env.AUTH_SECRET,
 });
