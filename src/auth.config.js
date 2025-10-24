@@ -13,7 +13,7 @@ export const authConfig = {
   },
   providers: [],
   callbacks: {
-    async token({ user, token }) {
+    async jwt({ user, token }) {
       if (user) {
         token.id = user.id || user._id?.toString();
         token.name = user.name;
@@ -23,7 +23,6 @@ export const authConfig = {
     },
     async session({ session, token }) {
       if (token) {
-        session.user = session.user || {};
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;

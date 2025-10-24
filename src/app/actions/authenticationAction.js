@@ -3,8 +3,6 @@
 import { signIn, signOut } from "@/auth";
 
 export async function credentialLogin(formData) {
-  // const email = formData.get("email");
-  // const password = formData.get("password");
   const { email, password } = formData;
 
   try {
