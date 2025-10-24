@@ -1,83 +1,40 @@
-import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-  FieldLegend,
-  FieldSeparator,
-  FieldSet,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+"use client";
+
+import JournalForm from "@/components/Journal/JournalForm";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { journalSchema } from "@/lib/validations.journal";
+
 export default function CreateJournalPage() {
+  const form = useForm({
+    resolver: zodResolver(journalSchema),
+    defaultValues: {
+      title: "",
+      content: "",
+      mood: "",
+      date: new Date(),
+    },
+  });
+
+  const onSubmit = async (data) => {
+    try {
+      console.log("Submitting journal:", data);
+      // Example: POST to API
+      const res = await fetch("/api/journal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      console.log({ result });
+    } catch (err) {
+      console.error("Error submitting journal:", err);
+    }
+  };
+
   return (
-    <div className="min-h-screen border-0 border-red-500 flex justify-center items-center p-4">
-      <div className="w-full max-w-5xl border p-4 rounded-2xl">
-        <form>
-          <FieldGroup>
-            <FieldSet>
-              <FieldGroup className={"md:flex-row"}>
-                <Field>
-                  <FieldLabel htmlFor="journal-title">Headline</FieldLabel>
-                  <Input
-                    id="journal-title"
-                    placeholder="Journal headline"
-                    required
-                  />
-                </Field>
-                <Field>
-                  <FieldLabel htmlFor="mood-select">Mood today</FieldLabel>
-                  <Select>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Happy or Sad?" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="happy">😃 Happy</SelectItem>
-                        <SelectItem value="sad">😔 Sad</SelectItem>
-                        <SelectItem value="neutral">😐 Neutral</SelectItem>
-                        <SelectItem value="anxious">😰 Anxious</SelectItem>
-                        <SelectItem value="excited">🤩 Excited</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </FieldGroup>
-            </FieldSet>
-            <FieldSeparator />
-            <FieldSet>
-              <FieldGroup>
-                <Field>
-                  <FieldLabel htmlFor="journal-content">
-                    Journal content
-                  </FieldLabel>
-                  <Textarea
-                    id="journal-content"
-                    placeholder="What's on your mind?"
-                    className="min-h-120"
-                  />
-                </Field>
-              </FieldGroup>
-            </FieldSet>
-            <Field orientation="horizontal">
-              <Button type="submit">Save</Button>
-              <Button variant="outline" type="button">
-                Cancel
-              </Button>
-            </Field>
-          </FieldGroup>
-        </form>
-      </div>
+    <div className="min-h-screen flex justify-center items-center p-4">
+      <JournalForm form={form} onSubmit={onSubmit} />
     </div>
   );
 }

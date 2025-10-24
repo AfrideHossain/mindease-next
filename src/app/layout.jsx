@@ -25,8 +25,8 @@ export default async function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
+          <Navbar />
           <Providers>
-            <Navbar />
             {/* Main content Area */}
             <main className="container mx-auto p-4 md:p-0">{children}</main>
 

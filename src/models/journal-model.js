@@ -17,7 +17,7 @@ const JournalSchema = new Schema(
       default: Date.now,
     },
   },
-  { timestamps }
+  { timestamps: true }
 );
 
 const Journal = models?.Journal || model("Journal", JournalSchema);
