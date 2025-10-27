@@ -1,33 +1,58 @@
 import { auth } from "@/auth";
 import { connectToDb } from "@/lib/db";
+import { journalSchema } from "@/lib/validations.journal";
 import Journal from "@/models/journal-model";
 import { NextResponse } from "next/server";
-export async function POST(request) {
-  // console.log("Request started...");
-  const session = await auth();
-  if (!session) {
-    throw new Error("Unauthorized request from unknown user");
-  }
-  // TODO: add ZOD validation and refactor
-  try {
-    const { title, mood, date, content } = await request.json();
-    console.log({ title, mood, date, content });
 
-    //connect to database
+export async function POST(request) {
+  try {
+    // ✅ 1. Auth check
+    const session = await auth();
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized request" },
+        { status: 401 }
+      );
+    }
+
+    // ✅ 2. Parse & validate input
+    const requestBody = await request.json();
+    // const validatedData = journalSchema.safeParse(requestBody);
+
+    // if (!validatedData.success) {
+    //   return NextResponse.json(
+    //     { error: "Invalid input data", issues: validatedData.error },
+    //     { status: 400 }
+    //   );
+    // }
+
+    // const { title, mood, date, content } = validatedData.data;
+    const { title, mood, date, content } = requestBody;
+
+    // ✅ 3. Connect to DB (only when needed)
     await connectToDb();
-    // console.log("From create journal api=> ", session);
-    const newJournalDoc = {
+
+    // ✅ 4. Create new journal document
+    const newJournal = await Journal.create({
       userId: session.user.id,
       title,
       mood,
       date,
       content,
-    };
+    });
 
-    const newJournal = await Journal.create(newJournalDoc);
-    return NextResponse.json({ success: true, newJournal });
+    // ✅ 5. Send clean response
+    return NextResponse.json(
+      { success: true, data: newJournal },
+      { status: 201 }
+    );
   } catch (error) {
-    console.error(error);
-    throw NextResponse.json("Internal server error", { status: 500 });
+    console.error("POST /api/journals error:", error);
+
+    // ✅ 6. Catch all fallback
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

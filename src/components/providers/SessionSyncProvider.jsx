@@ -12,10 +12,6 @@ export default function SessionSyncProvider({ children }) {
   const { data: session, status } = useSession();
   const dispatch = useAppDispatch();
 
-  console.log("-- [SessionSyncProvider] session details -- ", {
-    session,
-    status,
-  });
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
       dispatch(setUser(session.user));

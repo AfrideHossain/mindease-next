@@ -1,15 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import LogoutBtn from "./LogoutBtn";
 import NavUser from "./NavUser";
 import { Button } from "../ui/button";
 import { LogInIcon } from "lucide-react";
 import { ToggleDarkMode } from "./ToggleDarkMode";
-import { auth } from "@/auth";
+import { useAppSelector } from "@/lib/redux/hooks/hooks";
 
-export default async function NavbarControls() {
-  const session = await auth();
-  const user = session?.user;
+export default function NavbarControls() {
+  const { user, status } = useAppSelector((state) => state.authInfo);
 
+  // console.log("--[NavbarControls] log--", { user, status });
   return (
     <div className="flex gap-4 items-center">
       <ToggleDarkMode />
@@ -21,7 +23,7 @@ export default async function NavbarControls() {
           </Link>
         </Button>
       )}
-      <NavUser user={user} />
+      {user && <NavUser user={user} />}
     </div>
   );
 }

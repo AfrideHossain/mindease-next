@@ -108,8 +108,10 @@ export default function JournalForm({ form, onSubmit }) {
           </FieldSet>
 
           <div className="flex gap-3 justify-end">
-            <Button type="submit">Save</Button>
-            <Button type="button" variant="outline">
+            <Button type="submit" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting ? "Saving" : "Save"}
+            </Button>
+            <Button type="reset" variant="outline">
               Cancel
             </Button>
           </div>

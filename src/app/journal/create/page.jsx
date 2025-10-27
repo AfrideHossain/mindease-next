@@ -4,6 +4,7 @@ import JournalForm from "@/components/Journal/JournalForm";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { journalSchema } from "@/lib/validations.journal";
+import { toast } from "sonner";
 
 export default function CreateJournalPage() {
   const form = useForm({
@@ -26,9 +27,16 @@ export default function CreateJournalPage() {
         body: JSON.stringify(data),
       });
       const result = await res.json();
-      console.log({ result });
+      if (!res.ok) {
+        toast.error(result?.error || "Failed to create journal");
+        return;
+      }
+
+      toast.success("Journal created successfully!");
+      form.reset(); // clear form
     } catch (err) {
       console.error("Error submitting journal:", err);
+      toast.error("Something went wrong. Please try again.");
     }
   };
 
