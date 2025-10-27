@@ -1,17 +1,21 @@
 "use server";
 
 import { signIn, signOut } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function credentialLogin(formData) {
   const { email, password } = formData;
 
   try {
-    // start login
     const response = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
+
+    // ✅ revalidate the session on client
+    revalidatePath("/"); // you can choose a specific route if needed
+
     return response;
   } catch (error) {
     console.log("Credential login error: ", error);
@@ -19,7 +23,8 @@ export async function credentialLogin(formData) {
   }
 }
 
-// logout
 export async function logoutUser() {
-  await signOut({ redirectTo: "/" });
+  await signOut({ redirect: false }); // don't redirect automatically
+  // return something so client knows it finished
+  return { success: true };
 }

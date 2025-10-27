@@ -43,7 +43,7 @@ export const authConfig = {
       // Block access to protected routes if user is not logged in
       if (isRouteMatched(pathname, protectedRoutes) && !user) {
         const redirectUrl = new URL("/login", request.url);
-        redirectUrl.searchParams.set("callbackUrl", pathname || "/"); // optional: go back after login
+        redirectUrl.searchParams.set("callbackUrl", pathname);
         return NextResponse.redirect(redirectUrl);
       }
 

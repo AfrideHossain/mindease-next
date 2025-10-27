@@ -1,15 +1,9 @@
 import { auth } from "@/auth";
 import Link from "next/link";
-import LogoutBtn from "./LogoutBtn";
-import { ToggleDarkMode } from "./ToggleDarkMode";
-import { Button } from "../ui/button";
-import { LogInIcon } from "lucide-react";
 import { NavMenu } from "../NavigationMenu/NavMenu";
-import NavUser from "./NavUser";
+import NavbarControls from "./NavbarControls";
 
 export default async function Navbar() {
-  const session = await auth();
-  console.log("Session from navbar component=> ", session);
 
   return (
     <nav className="container mx-auto bg-background px-4 md:px-0 h-16 flex items-center">
@@ -22,7 +16,7 @@ export default async function Navbar() {
         <div>
           <NavMenu />
         </div>
-        <div className="flex gap-4 items-center">
+        {/* <div className="flex gap-4 items-center">
           <ToggleDarkMode />
           {session?.user ? (
             <LogoutBtn />
@@ -34,7 +28,8 @@ export default async function Navbar() {
             </Button>
           )}
           <NavUser user={session?.user} />
-        </div>
+        </div> */}
+        <NavbarControls />
       </div>
     </nav>
   );

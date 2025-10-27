@@ -1,10 +1,10 @@
 import { Quicksand } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/components/theme-provider";
-import { connectToDb } from "@/lib/db";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar/Navbar";
 import Providers from "@/components/providers/Providers";
+import { auth } from "@/auth";
 
 const quicksand = Quicksand({ subsets: ["latin"] });
 
@@ -14,8 +14,8 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  // await connectToDb();
-  // console.log("After mongo connection => ", global);
+  // const session = await auth();
+  // console.log("-- [app/layout.jsx] SESSION LOG --", session);
   return (
     <html lang="en" className="h-full w-full" suppressHydrationWarning>
       <body className={`${quicksand.className} antialiased h-full w-full`}>
@@ -25,8 +25,9 @@ export default async function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
           <Providers>
+            {/* Navbar */}
+            <Navbar />
             {/* Main content Area */}
             <main className="container mx-auto p-4 md:p-0">{children}</main>
 

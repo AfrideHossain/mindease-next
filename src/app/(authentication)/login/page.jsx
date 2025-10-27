@@ -5,9 +5,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { loginSchema } from "@/lib/validations.auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { credentialLogin } from "@/app/actions/authenticationAction";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
 
 export default function LoginPage() {
   const [message, setMessage] = useState("");
@@ -18,24 +19,36 @@ export default function LoginPage() {
   } = useForm({ resolver: zodResolver(loginSchema) });
   // router setup
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Define the target redirect URL
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const { update } = useSession();
 
   // onsubmit handler
   const onSubmit = async (submissionData) => {
-    console.log(submissionData);
-    // send request
+    setMessage(""); // Clear previous messages
     try {
-      const res = await credentialLogin(submissionData);
-      console.log({ res });
-      if (!!res.error) {
-        console.log(res.error);
-        setMessage(res.error.message);
-      } else {
-        router.push("/");
-      }
+      // If credentialLogin returns without throwing, it was successful.
+      // If it fails, it throws an error, which is caught below.
+      await credentialLogin(submissionData);
+
+      // ✅ manually refresh session
+      await update();
+
+      toast.success("Login successful!");
+      router.push(callbackUrl); // Redirect on success
     } catch (error) {
-      console.log("sign in error=> ", error);
-      toast.error("Login failed! Check your credentials.");
-      setMessage("Check your credentials");
+      console.error("sign in error=> ", error);
+
+      // Provide a more specific user message based on the error if possible
+      const errorMessage = error.message.includes("credential")
+        ? "Invalid email or password."
+        : "Login failed due to an unexpected error.";
+
+      toast.error(errorMessage);
+      setMessage(errorMessage);
     }
   };
   return (
