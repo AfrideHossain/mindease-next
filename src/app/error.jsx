@@ -19,7 +19,7 @@ export default function Error({ error, reset }) {
       >
         Try again
       </button>
-      <p>{error.message}</p>
+      <p>{error?.message}</p>
     </div>
   );
 }

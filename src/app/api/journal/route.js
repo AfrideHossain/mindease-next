@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { connectToDb } from "@/lib/db";
-import { journalSchema } from "@/lib/validations.journal";
+// import { journalSchema } from "@/lib/validations.journal";
 import Journal from "@/models/journal-model";
 import { NextResponse } from "next/server";
 
@@ -52,6 +52,43 @@ export async function POST(request) {
     // ✅ 6. Catch all fallback
     return NextResponse.json(
       { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
+
+// get all journals
+
+export async function GET() {
+  try {
+    // ✅ Step 1: Authentication Check
+    const session = await auth();
+
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { error: "Unauthorized request" },
+        { status: 401 }
+      );
+    }
+
+    // ✅ Step 2: Connect to Database
+    await connectToDb();
+
+    // ✅ Step 3: Fetch Journals for Logged-in User
+    const journals = await Journal.find({ userId: session.user.id })
+      .sort({ createdAt: -1 }) // optional: newest first
+      .lean();
+
+    // ✅ Step 4: Return Response
+    return NextResponse.json(
+      { success: true, count: journals.length, data: journals },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("❌ Journals API GET Error:", error);
+
+    return NextResponse.json(
+      { error: "Internal Server Error", details: error.message },
       { status: 500 }
     );
   }

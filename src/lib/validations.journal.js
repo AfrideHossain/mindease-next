@@ -6,3 +6,11 @@ export const journalSchema = z.object({
   mood: z.string().nonempty("Please select a mood"),
   date: z.date({ required_error: "Please select a date" }),
 });
+
+export const MOODS = {
+  happy: "😃 Happy",
+  sad: "😔 Sad",
+  anxious: "😰 Anxious",
+  neutral: "😐 Neutral",
+  excited: "🤩 Excited",
+};

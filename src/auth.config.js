@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import isRouteMatched from "./lib/routes/checkRoutes";
 import { protectedRoutes } from "./lib/routes/routes";
+import jwt from "jsonwebtoken";
 
 export const authConfig = {
   pages: {
@@ -18,6 +19,15 @@ export const authConfig = {
         token.id = user.id || user._id?.toString();
         token.name = user.name;
         token.email = user.email;
+        token.accessToken = jwt.sign(
+          {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          },
+          process.env.AUTH_SECRET,
+          { expiresIn: "2h" }
+        );
       }
       return token;
     },
@@ -26,6 +36,7 @@ export const authConfig = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
+        session.accessToken = token.accessToken;
       }
       return session;
     },

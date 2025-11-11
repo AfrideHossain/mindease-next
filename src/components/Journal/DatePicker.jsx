@@ -19,14 +19,15 @@ function formatDate(date) {
   });
 }
 
-export default function DatePicker({ setHookFormValue }) {
+export default function DatePicker({ setHookFormValue, setFilterDate }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(new Date());
   const [month, setMonth] = useState(date);
 
   useEffect(() => {
-    setHookFormValue("date", date);
-  }, [date, setHookFormValue]);
+    setHookFormValue && setHookFormValue("date", date);
+    setFilterDate && setFilterDate(date);
+  }, [date, setHookFormValue, setFilterDate]);
 
   return (
     <div className="relative flex items-center gap-2">
