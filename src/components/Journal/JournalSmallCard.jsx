@@ -13,10 +13,11 @@ import { PenBoxIcon, SmileIcon, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { MOODS } from "@/lib/validations.journal";
 import NavigateToEdit from "./NavigateToEdit";
-export default function JournalSmallCard({ journal }) {
+import DeleteJournalDialog from "./DeleteJournalDialog";
+export default function JournalSmallCard({ journal, setJournals }) {
   if (!journal) return null;
 
-  const { title, content, mood, date } = journal;
+  const { _id, title, content, mood, date } = journal;
   // console.log({ content });
 
   const preview =
@@ -32,9 +33,7 @@ export default function JournalSmallCard({ journal }) {
         </CardDescription>
         <CardAction className={"space-x-4"}>
           <NavigateToEdit originPath={`/journal/${journal._id.toString()}`} />
-          <Button variant={"destructive"}>
-            <Trash2 className={"text-red-500"} />
-          </Button>
+          <DeleteJournalDialog id={_id} setJournals={setJournals} />
         </CardAction>
       </CardHeader>
       <CardContent>

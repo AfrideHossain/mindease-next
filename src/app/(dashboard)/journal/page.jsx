@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { getAllJournals } from "../actions/journal/journalsAction";
 import JournalPageHeading from "@/components/Journal/JournalPageHeading";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -9,17 +8,25 @@ import JournalSmallCard from "@/components/Journal/JournalSmallCard";
 import JournalEmptyState from "@/components/Journal/JournalEmptyState";
 import { PlusIcon } from "lucide-react";
 import DatePicker from "@/components/Journal/DatePicker";
+import { useSearchParams } from "next/navigation";
+import { getAllJournals } from "@/app/actions/journal/journalsAction";
 
 export default function JournalsPage() {
+  const searchParams = useSearchParams();
+  const dateString = searchParams.get("date");
+
   const [journals, setJournals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [filterDate, setFilterDate] = useState(new Date());
+  const [date, setDate] = useState(
+    dateString ? new Date(dateString) : new Date()
+  );
+
   useEffect(() => {
     const fetchJournals = async () => {
       setLoading(true);
       try {
-        const response = await getAllJournals(filterDate);
+        const response = await getAllJournals(date);
         if (response.success) {
           setJournals(JSON.parse(response.data));
         } else {
@@ -33,12 +40,12 @@ export default function JournalsPage() {
       }
     };
     fetchJournals();
-  }, [filterDate]);
+  }, [date]);
 
   // console.log(journals);
   return (
     // <>Hello journals page</>
-    <section className="min-h-screen w-full flex flex-col items-center py-16 px-6">
+    <section className="min-h-screen w-full flex flex-col items-center px-6">
       <div className="w-full">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 border-b border-neutral-200/60 dark:border-neutral-800 pb-6">
@@ -50,7 +57,7 @@ export default function JournalsPage() {
             </p>
           </div>
           <div className="space-y-4">
-            <DatePicker setFilterDate={setFilterDate} />
+            <DatePicker date={date} setDate={setDate} />
             <Button
               asChild
               className="w-full rounded-full text-sm font-medium bg-neutral-900 hover:bg-neutral-800 text-white dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 transition-all shadow-sm"
@@ -71,7 +78,11 @@ export default function JournalsPage() {
         ) : journals.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 place-items-stretch">
             {journals.map((journal) => (
-              <JournalSmallCard key={journal._id} journal={journal} />
+              <JournalSmallCard
+                key={journal._id}
+                journal={journal}
+                setJournals={setJournals}
+              />
             ))}
           </div>
         ) : (

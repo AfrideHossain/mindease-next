@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import Link from "next/link";
-import { NavMenu } from "../NavigationMenu/NavMenu";
+import { NavMenu } from "../NavMenu/NavMenu";
 import NavbarControls from "./NavbarControls";
 
 export default async function Navbar() {

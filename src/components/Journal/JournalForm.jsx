@@ -20,9 +20,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import DatePicker from "./DatePicker";
+import { useEffect, useState } from "react";
 
 export default function JournalForm({ form, onSubmit }) {
+  const [date, setDate] = useState(new Date());
   const { control, handleSubmit, setValue } = form;
+
+  useEffect(() => {
+    setValue("date", date);
+  }, [date]);
 
   return (
     <div className="w-full max-w-3xl border p-6 rounded-2xl shadow-sm bg-background">
@@ -79,7 +85,7 @@ export default function JournalForm({ form, onSubmit }) {
                 render={() => (
                   <FormItem>
                     <FieldLabel>Date</FieldLabel>
-                    <DatePicker setHookFormValue={setValue} />
+                    <DatePicker date={date} setDate={setDate} />
                     <FormMessage />
                   </FormItem>
                 )}

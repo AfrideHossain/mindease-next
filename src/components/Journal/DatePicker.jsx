@@ -19,15 +19,15 @@ function formatDate(date) {
   });
 }
 
-export default function DatePicker({ setHookFormValue, setFilterDate }) {
+export default function DatePicker({ date, setDate }) {
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const [month, setMonth] = useState(date);
 
-  useEffect(() => {
-    setHookFormValue && setHookFormValue("date", date);
-    setFilterDate && setFilterDate(date);
-  }, [date, setHookFormValue, setFilterDate]);
+  // useEffect(() => {
+  //   setHookFormValue && setHookFormValue("date", date);
+  //   setFilterDate && setFilterDate(date);
+  // }, [date, setHookFormValue, setFilterDate]);
 
   return (
     <div className="relative flex items-center gap-2">

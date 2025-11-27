@@ -12,10 +12,10 @@ export default async function SingleJournalPage({ params }) {
     throw new Error(journalresponse.error);
   }
 
-  const journal = journalresponse.data;
+  const journal = JSON.parse(journalresponse.data);
 
   return (
-    <section className="w-full min-h-screen flex flex-col items-center px-4 py-10">
+    <section className="w-full min-h-screen flex flex-col items-center px-4">
       <div className="w-full space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
@@ -44,7 +44,7 @@ export default async function SingleJournalPage({ params }) {
             {journal.title}
           </h1>
           <p className="text-sm text-neutral-500">
-            {new Date(journal.date).toLocaleDateString(undefined, {
+            {new Date(journal?.date).toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",

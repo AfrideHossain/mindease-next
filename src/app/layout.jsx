@@ -4,7 +4,6 @@ import ThemeProvider from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "@/components/Navbar/Navbar";
 import Providers from "@/components/providers/Providers";
-import { connectToDb } from "@/lib/db";
 const quicksand = Quicksand({ subsets: ["latin"] });
 
 export const metadata = {
@@ -13,7 +12,7 @@ export const metadata = {
     "MindEase - a private digital journal and mood tracker. MindEase helps users log daily thoughts, track moods and visualize their emotional patterns - encouraging mindfulness and mental wellbeing.",
 };
 
-export default async function RootLayout({ children }) {
+export default async function GlobalLayout({ children }) {
   // const session = await auth();
   // console.log("-- [app/layout.jsx] SESSION LOG --", session);
   return (
@@ -27,9 +26,9 @@ export default async function RootLayout({ children }) {
         >
           <Providers>
             {/* Navbar */}
-            <Navbar />
+            {/* <Navbar /> */}
             {/* Main content Area */}
-            <main className="container mx-auto p-4 md:p-0">{children}</main>
+            {children}
 
             <Toaster />
           </Providers>
